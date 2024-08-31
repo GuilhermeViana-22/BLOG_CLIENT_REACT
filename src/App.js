@@ -9,8 +9,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Blog />} />
-        {/* Outras rotas podem ser adicionadas aqui */}
       </Routes>
     </Router>
   );
