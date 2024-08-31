@@ -92,36 +92,45 @@ const linksMap = {
 };
 
 const Categories = () => {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const data = await getCategories();
-        setCategories(data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
+        const [categories, setCategories] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState(null);
+      
+        useEffect(() => {
+          const fetchCategories = async () => {
+            const cachedCategories = localStorage.getItem('categories');
+      
+            if (cachedCategories) {
+              // Se houver dados armazenados, use-os
+              setCategories(JSON.parse(cachedCategories));
+              setLoading(false);
+            } else {
+              try {
+                const data = await getCategories();
+                setCategories(data);
+                localStorage.setItem('categories', JSON.stringify(data)); // Armazena os dados no localStorage
+              } catch (err) {
+                setError(err);
+              } finally {
+                setLoading(false);
+              }
+            }
+          };
+      
+          fetchCategories();
+        }, []);
+      
+        if (loading) {
+          return <div>Loading...</div>;
+        }
+      
+        if (error) {
+          return <div>Error: {error.message}</div>;
+        }
   return (
     <div className="flex min-h-screen bg-gray-200">
-    <div className="max-w-sm w-full bg-white overflow-hidden rounded-lg shadow-lg">
+    <div className="max-w-sm w-full bg-white overflow-hidden ">
       <div className="p-6">
         <ul className="list-disc list-none list-inside text-gray-700 mb-6">
           {categories.map((category) => (
